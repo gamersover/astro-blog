@@ -1,0 +1,10 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import {topics,getPosts} from '../../lib/posts.mjs';
+export function getStaticPaths(){return topics.map(topic=>({params:{topic:topic.id},props:{topic}}))}
+const {topic}=Astro.props;
+const posts=getPosts().filter(p=>p.topic===topic.id);
+if(topic.id==='mind')posts.reverse();
+---
+<Base title={topic.name} description={topic.description}><div class="wrap breadcrumb"><a href="/topics/">专题</a><span>/</span><span>{topic.name}</span></div><section class="wrap page-heading"><p class="eyebrow">{posts.length} 篇文章 · {topic.caption}</p><h1>{topic.name}</h1><p>{topic.description}</p></section><section class="wrap page-section"><PostList posts={posts}/></section></Base>

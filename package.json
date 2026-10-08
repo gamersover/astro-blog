@@ -1,0 +1,36 @@
+{
+  "name": "astro-blog",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1",
+    "check": "astro check",
+    "verify": "node scripts/verify.mjs",
+    "migrate": "node scripts/migrate.mjs"
+  },
+  "dependencies": {
+    "astro": "7.3.7",
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "latest",
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.0",
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-texmath": "^1.0.0",
+    "katex": "^0.16.22",
+    "mermaid": "^11.12.0",
+    "highlight.js": "^11.11.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "latest",
+    "typescript": "^5.9.0",
+    "@types/markdown-it": "^14.1.2",
+    "@types/js-yaml": "^4.0.9"
+  }
+}

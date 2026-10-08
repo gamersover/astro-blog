@@ -1,0 +1,5 @@
+---
+import Base from '../../layouts/Base.astro';import PostList from '../../components/PostList.astro';import {getPosts} from '../../lib/posts.mjs';
+const posts=getPosts();const years=[...new Set(posts.map(p=>p.date.slice(0,4)))];
+---
+<Base title="文章归档"><section class="wrap page-heading"><p class="eyebrow">THE ARCHIVE</p><h1>写过的，都在这里。</h1><p>{posts.length} 篇文章，从一个问题到另一个问题，留下这些年的思考轨迹。</p></section><section class="wrap page-section archive-section"><nav class="filter-bar" aria-label="按年份浏览">{years.map(year=><a href={`#year-${year}`}>{year}</a>)}</nav>{years.map(year=><section id={`year-${year}`}><h2 class="archive-year">{year}<small>{posts.filter(p=>p.date.startsWith(year)).length} 篇</small></h2><PostList posts={posts.filter(p=>p.date.startsWith(year))}/></section>)}</section></Base>

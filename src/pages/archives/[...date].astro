@@ -1,0 +1,6 @@
+---
+import Base from '../../layouts/Base.astro';import PostList from '../../components/PostList.astro';import {getPosts} from '../../lib/posts.mjs';
+export function getStaticPaths(){const posts=getPosts();const dates=new Set(posts.flatMap(p=>[p.date.slice(0,4),p.date.slice(0,7).replace('-','/')]));return [...dates].map(date=>({params:{date},props:{date}}))}
+const {date}=Astro.props;const posts=getPosts().filter(p=>p.date.replaceAll('-','/').startsWith(date));
+---
+<Base title={`${date} 归档`}><section class="wrap page-heading"><p class="eyebrow">THE ARCHIVE</p><h1>{date.replace('/',' 年 ')}{date.includes('/')?' 月':' 年'}</h1><p>{posts.length} 篇文章 · <a href="/archives/">查看全部归档 →</a></p></section><section class="wrap page-section"><PostList posts={posts}/></section></Base>

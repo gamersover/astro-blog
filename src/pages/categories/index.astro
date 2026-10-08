@@ -1,0 +1,5 @@
+---
+import Base from '../../layouts/Base.astro';import {getPosts} from '../../lib/posts.mjs';
+const posts=getPosts();const names=[...new Set(posts.flatMap(p=>p.categories))];
+---
+<Base title="分类"><section class="wrap page-heading"><p class="eyebrow">BROWSE THE JOURNAL</p><h1>按分类寻找。</h1><p>从熟悉的词语出发，发现另一条阅读线索。</p></section><section class="wrap page-section taxonomy">{names.map(name=><a href={`/categories/${encodeURIComponent(name)}/`}>{name}<small>{posts.filter(p=>p.categories.includes(name)).length}</small></a>)}</section></Base>

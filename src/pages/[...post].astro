@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';import {getPosts,getSeries,topics,displayDate} from '../lib/posts.mjs';
+export function getStaticPaths(){return getPosts().map(post=>({params:{post:post.route},props:{post}}))}
+const {post}=Astro.props;const topic=topics.find(t=>t.id===post.topic)!;const series=getSeries(post);const index=series.findIndex(p=>p.slug===post.slug);const prev=series[index-1],next=series[index+1];const headingBase=Math.min(...post.headings.map(h=>h.level));
+---
+<Base title={post.title} description={post.excerpt} article>
+ <div class="wrap breadcrumb"><a href="/">首页</a><span>/</span><a href={`/topics/${topic.id}/`}>{topic.name}</a></div>
+ <header class="wrap"><div class="article-header"><p class="eyebrow">{topic.name} / {post.minutes} 分钟阅读</p><h1>{post.title}</h1><div class="article-meta"><span>陈华杰</span><time datetime={post.date}>{displayDate(post.date)}</time>{post.categories.map(c=><a href={`/categories/${encodeURIComponent(c)}/`}>{c}</a>)}</div></div></header>
+ <div class:list={['wrap','article-layout',{poetry:post.topic==='poetry'}]}>
+  <article><div class="prose" set:html={post.html}/><div class="article-tags">{post.tags.map(tag=><a class="tag" href={`/tags/${encodeURIComponent(tag)}/`}># {tag}</a>)}</div><div class="article-end"><p class="eyebrow">{series.length>1?'继续这个系列':'感谢阅读'}</p>{(prev||next)?<nav class="series-links" aria-label="系列文章">{prev&&<a href={prev.url}><small>← 上一篇</small>{prev.title}</a>}{next&&<a href={next.url}><small>下一篇 →</small>{next.title}</a>}</nav>:<a class="text-link" href={`/topics/${topic.id}/`}>继续阅读「{topic.name}」 ↗</a>}</div></article>
+  {post.headings.length>0&&<details class="article-sidebar" open><summary><span>本文目录</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><nav aria-label="文章目录">{post.headings.map(h=><a class={`toc-link toc-level-${Math.min(h.level-headingBase,2)}`} href={`#${h.slug}`}>{h.title}</a>)}</nav></details>}
+ </div>
+ <script>
+ document.querySelectorAll<HTMLButtonElement>('.copy-code').forEach(button=>{
+  const label=button.querySelector('span')!;
+  button.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(button.closest('.code-block')?.querySelector('code')?.textContent||'');label.textContent='已复制';setTimeout(()=>label.textContent='复制',1500)}catch{label.textContent='请手动复制'}});
+ });
+ const toc=document.querySelector<HTMLDetailsElement>('.article-sidebar');
+ if(toc){
+  const mobile=matchMedia('(max-width:640px)');
+  const syncToc=()=>{toc.open=!mobile.matches};syncToc();mobile.addEventListener('change',syncToc);
+  const links=Array.from(toc.querySelectorAll<HTMLAnchorElement>('.toc-link'));
+  const sections=links.map(link=>document.getElementById(decodeURIComponent(link.hash.slice(1))));
+  let active=-1,queued=false;
+  const updateToc=()=>{
+   let current=0;
+   sections.forEach((section,i)=>{if(section&&section.getBoundingClientRect().top<=130)current=i});
+   if(current!==active){links.forEach((link,i)=>{link.classList.toggle('active',i===current);if(i===current)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current')});active=current}
+   queued=false;
+  };
+  window.addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(updateToc)}},{passive:true});updateToc();
+  links.forEach(link=>link.addEventListener('click',()=>{if(mobile.matches)toc.open=false}));
+ }
+ if(document.querySelector('.mermaid')){
+  import('mermaid').then(({default:mermaid})=>{mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:document.documentElement.dataset.theme==='dark'?'dark':'neutral',fontFamily:'sans-serif'});return mermaid.run({querySelector:'.mermaid'})}).catch(()=>{document.querySelectorAll('.mermaid').forEach(el=>el.setAttribute('aria-label','流程图源代码'))});
+ }
+ </script>
+</Base>

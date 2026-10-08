@@ -1,0 +1,1 @@
+export const GET=()=>new Response(import.meta.env.SITE_LIVE==='true'?'User-agent: *\nAllow: /\nSitemap: https://blog.caoqinping.com/sitemap-index.xml\n':'User-agent: *\nDisallow: /\n',{headers:{'Content-Type':'text/plain; charset=utf-8'}});

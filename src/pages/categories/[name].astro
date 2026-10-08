@@ -1,0 +1,6 @@
+---
+import Base from '../../layouts/Base.astro';import PostList from '../../components/PostList.astro';import {getPosts} from '../../lib/posts.mjs';
+export function getStaticPaths(){return [...new Set(getPosts().flatMap(p=>p.categories))].map(name=>({params:{name},props:{name}}))}
+const {name}=Astro.props;const posts=getPosts().filter(p=>p.categories.includes(name));
+---
+<Base title={name}><section class="wrap page-heading"><p class="eyebrow">分类 / {posts.length} 篇文章</p><h1>{name}</h1><a class="text-link" href="/categories/">全部分类 ↗</a></section><section class="wrap page-section"><PostList posts={posts}/></section></Base>

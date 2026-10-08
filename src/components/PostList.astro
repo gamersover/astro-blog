@@ -1,0 +1,7 @@
+---
+import {topics,displayDate} from '../lib/posts.mjs';
+const {posts}=Astro.props;
+---
+<div class="post-list">
+{posts.map((p:any)=><article class="post-row"><div class="row-date"><time datetime={p.date}>{displayDate(p.date)}</time><span>{topics.find(t=>t.id===p.topic)?.name}</span></div><a class="row-story" href={p.url}><h3>{p.title}</h3><p>{p.excerpt}</p><span class="read-meta">{p.minutes} 分钟阅读 <span aria-hidden="true">↗</span></span></a></article>)}
+</div>

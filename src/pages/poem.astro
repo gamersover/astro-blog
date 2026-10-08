@@ -1,0 +1,4 @@
+---
+import Base from '../layouts/Base.astro';import PostList from '../components/PostList.astro';import {getPosts} from '../lib/posts.mjs';
+---
+<Base title="诗稿"><section class="wrap page-heading"><p class="eyebrow">POEMS & MOMENTS</p><h1>诗与片刻。</h1><p>在文字里，留住生活里的某个瞬间。</p></section><section class="wrap page-section"><PostList posts={getPosts().filter(p=>p.topic==='poetry')}/></section></Base>
