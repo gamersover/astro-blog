@@ -11,28 +11,51 @@ const {post}=Astro.props;const topic=topics.find(t=>t.id===post.topic)!;const se
   {post.headings.length>0&&<details class="article-sidebar" open><summary><span>本文目录</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><nav aria-label="文章目录">{post.headings.map(h=><a class={`toc-link toc-level-${Math.min(h.level-headingBase,2)}`} href={`#${h.slug}`}>{h.title}</a>)}</nav></details>}
  </div>
  <script>
- document.querySelectorAll<HTMLButtonElement>('.copy-code').forEach(button=>{
-  const label=button.querySelector('span')!;
-  button.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(button.closest('.code-block')?.querySelector('code')?.textContent||'');label.textContent='已复制';setTimeout(()=>label.textContent='复制',1500)}catch{label.textContent='请手动复制'}});
+ let cleanup=()=>{};
+ document.addEventListener('astro:before-swap',()=>cleanup());
+ document.addEventListener('astro:page-load',()=>{
+  cleanup();
+  if(!document.querySelector('.article-layout'))return;
+  const controller=new AbortController();
+  const {signal}=controller;
+  let frame=0;
+  const timers=new Set<ReturnType<typeof setTimeout>>();
+  cleanup=()=>{controller.abort();cancelAnimationFrame(frame);timers.forEach(clearTimeout);timers.clear()};
+  document.querySelectorAll<HTMLButtonElement>('.copy-code').forEach(button=>{
+   const label=button.querySelector('span')!;
+   button.addEventListener('click',async()=>{
+    try{
+     await navigator.clipboard.writeText(button.closest('.code-block')?.querySelector('code')?.textContent||'');
+     if(signal.aborted)return;
+     label.textContent='已复制';
+     const timer=setTimeout(()=>{label.textContent='复制';timers.delete(timer)},1500);timers.add(timer);
+    }catch{if(!signal.aborted)label.textContent='请手动复制'}
+   },{signal});
+  });
+  const toc=document.querySelector<HTMLDetailsElement>('.article-sidebar');
+  if(toc){
+   const mobile=matchMedia('(max-width:640px)');
+   const syncToc=()=>{toc.open=!mobile.matches};syncToc();mobile.addEventListener('change',syncToc,{signal});
+   const links=Array.from(toc.querySelectorAll<HTMLAnchorElement>('.toc-link'));
+   const sections=links.map(link=>document.getElementById(decodeURIComponent(link.hash.slice(1))));
+   let active=-1;
+   const updateToc=()=>{
+    let current=0;
+    sections.forEach((section,i)=>{if(section&&section.getBoundingClientRect().top<=130)current=i});
+    if(current!==active){links.forEach((link,i)=>{link.classList.toggle('active',i===current);if(i===current)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current')});active=current}
+    frame=0;
+   };
+   window.addEventListener('scroll',()=>{if(!frame)frame=requestAnimationFrame(updateToc)},{passive:true,signal});updateToc();
+   links.forEach(link=>link.addEventListener('click',()=>{if(mobile.matches)toc.open=false},{signal}));
+  }
+  const diagrams=Array.from(document.querySelectorAll<HTMLElement>('.mermaid'));
+  if(diagrams.length){
+   import('mermaid').then(({default:mermaid})=>{
+    if(signal.aborted)return;
+    mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:document.documentElement.dataset.theme==='dark'?'dark':'neutral',fontFamily:'sans-serif'});
+    return mermaid.run({nodes:diagrams});
+   }).catch(()=>{if(!signal.aborted)diagrams.forEach(el=>el.setAttribute('aria-label','流程图源代码'))});
+  }
  });
- const toc=document.querySelector<HTMLDetailsElement>('.article-sidebar');
- if(toc){
-  const mobile=matchMedia('(max-width:640px)');
-  const syncToc=()=>{toc.open=!mobile.matches};syncToc();mobile.addEventListener('change',syncToc);
-  const links=Array.from(toc.querySelectorAll<HTMLAnchorElement>('.toc-link'));
-  const sections=links.map(link=>document.getElementById(decodeURIComponent(link.hash.slice(1))));
-  let active=-1,queued=false;
-  const updateToc=()=>{
-   let current=0;
-   sections.forEach((section,i)=>{if(section&&section.getBoundingClientRect().top<=130)current=i});
-   if(current!==active){links.forEach((link,i)=>{link.classList.toggle('active',i===current);if(i===current)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current')});active=current}
-   queued=false;
-  };
-  window.addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(updateToc)}},{passive:true});updateToc();
-  links.forEach(link=>link.addEventListener('click',()=>{if(mobile.matches)toc.open=false}));
- }
- if(document.querySelector('.mermaid')){
-  import('mermaid').then(({default:mermaid})=>{mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:document.documentElement.dataset.theme==='dark'?'dark':'neutral',fontFamily:'sans-serif'});return mermaid.run({querySelector:'.mermaid'})}).catch(()=>{document.querySelectorAll('.mermaid').forEach(el=>el.setAttribute('aria-label','流程图源代码'))});
- }
  </script>
 </Base>
