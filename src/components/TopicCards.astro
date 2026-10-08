@@ -1,5 +1,6 @@
 ---
+import TopicDiagram from './TopicDiagram.astro';
 import {topics,getPosts} from '../lib/posts.mjs';
 const posts=getPosts();
 ---
-<div class="topic-grid">{topics.map((t,i)=><a class:list={['topic-card',`topic-${t.id}`]} href={`/topics/${t.id}/`}><span class="topic-index">0{i+1} / {posts.filter(p=>p.topic===t.id).length} 篇</span><span class="topic-mark" aria-hidden="true">{t.mark}</span><div><h3>{t.name}<span aria-hidden="true">↗</span></h3><p>{t.caption}</p></div></a>)}</div>
+<div class="topic-grid">{topics.map((t,i)=><a class:list={['topic-card',`topic-${t.id}`]} href={`/topics/${t.id}/`}><span class="topic-index">0{i+1} / {posts.filter(p=>p.topic===t.id).length} 篇</span><div class="topic-art"><TopicDiagram topic={t.id}/></div><div><h3>{t.name}<span aria-hidden="true">↗</span></h3><p>{t.caption}</p></div></a>)}</div>

@@ -1,10 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PostList from '../../components/PostList.astro';
+import TopicDiagram from '../../components/TopicDiagram.astro';
 import {topics,getPosts} from '../../lib/posts.mjs';
 export function getStaticPaths(){return topics.map(topic=>({params:{topic:topic.id},props:{topic}}))}
 const {topic}=Astro.props;
 const posts=getPosts().filter(p=>p.topic===topic.id);
 if(topic.id==='mind')posts.reverse();
+const volume=['一','二','三','四'][topics.findIndex(t=>t.id===topic.id)];
 ---
-<Base title={topic.name} description={topic.description}><div class="wrap breadcrumb"><a href="/topics/">专题</a><span>/</span><span>{topic.name}</span></div><section class="wrap page-heading"><p class="eyebrow">{posts.length} 篇文章 · {topic.caption}</p><h1>{topic.name}</h1><p>{topic.description}</p></section><section class="wrap page-section"><PostList posts={posts}/></section></Base>
+<Base title={topic.name} description={topic.description}><div class="wrap breadcrumb"><a href="/topics/">专题</a><span>/</span><span>{topic.name}</span></div><section class="wrap page-heading topic-heading"><div><p class="eyebrow"><span class="volume-label">卷{volume}</span>{posts.length} 篇文章 · {topic.caption}</p><h1>{topic.name}</h1><p>{topic.description}</p></div><div class="topic-frontispiece"><TopicDiagram topic={topic.id}/><span>{topic.name} / 尘雨尘风</span></div></section><section class="wrap page-section"><PostList posts={posts}/></section></Base>
