@@ -14,7 +14,12 @@ const current=Astro.url.pathname;
  <meta name="description" content={description}/><link rel="canonical" href={canonical}/>
  <meta property="og:title" content={title||site.title}/><meta property="og:description" content={description}/><meta property="og:type" content={article?'article':'website'}/><meta property="og:url" content={canonical}/>
  {(noindex||import.meta.env.SITE_LIVE!=='true')&&<meta name="robots" content="noindex,follow"/>}
- <link rel="icon" type="image/svg+xml" href="/favicon.svg"/><link rel="alternate" type="application/rss+xml" title="尘雨尘风 RSS" href="/rss.xml"/>
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+ <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+ <link rel="manifest" href="/site.webmanifest"/>
+ <meta name="apple-mobile-web-app-title" content={site.title}/>
+ <meta name="theme-color" content="#f6f4ed"/>
+ <link rel="alternate" type="application/rss+xml" title="尘雨尘风 RSS" href="/rss.xml"/>
  <script is:inline>try{document.documentElement.dataset.theme=localStorage.getItem('blog-theme')||'light'}catch{}</script>
 </head>
 <body>
