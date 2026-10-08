@@ -38,11 +38,17 @@ draft: true
 
 ## 部署与域名切换
 
-连接 GitHub 仓库 `gamersover/astro-blog` 到独立的 Vercel 项目。每次 push 自动构建，输出 `dist/`，无需另建静态文件仓库。
+正式站使用 **Cloudflare Pages**，项目名 `astro-blog`，连接 GitHub 仓库 `gamersover/astro-blog` 的 `main` 分支。每次 push 自动构建发布，无需另建静态文件仓库。
 
-当前是预览阶段：默认输出 `noindex` 与禁止索引的 robots.txt。旧 `blog.caoqinping.com` 继续由原站提供服务。
+- 正式域名：`https://blog.caoqinping.com`
+- Pages 默认地址：`https://astro-blog-16d.pages.dev`
+- 构建命令：`npm run build`；输出目录：`dist`；生产环境：`NODE_VERSION=24`、`SITE_LIVE=true`。
+- `SITE_URL` 默认是正式域名。预览环境不设置 `SITE_LIVE=true`，避免搜索引擎收录测试页面。
+- DNSPod 的 `blog` CNAME 指向 `astro-blog-16d.pages.dev`，TTL 为 600 秒。修改 DNS 前须先在 Pages 中添加自定义域名。
+- Vercel 候选站 `https://astro-blog-sigma-sooty.vercel.app` 保留作对照，默认禁止索引，不绑定正式域名。
+- 回退：旧 Hexo 项目和部署保留；需要回退时，将 `blog` CNAME 恢复为 `cname-china.vercel-dns.com`，等待 DNS 缓存更新。
 
-验收完成后，才将博客域名绑定到新项目，并配置 `SITE_LIVE=true`、`SITE_URL=https://blog.caoqinping.com`，重新部署。原 Hexo 仓库和部署保留，以便回退。
+个人主页通过 `/api/posts.json` 获取最近文章；同时保留旧 Hexo 抓取方式以兼容域名切换和回退。
 
 - RSS：`/rss.xml`
 - 全文搜索：`/search/`（静态 JSON 索引，无后端数据库）
