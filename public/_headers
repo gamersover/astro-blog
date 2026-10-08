@@ -1,2 +1,10 @@
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Keep prefetched HTML fresh briefly so navigation avoids a network revalidation.
+# Directory routes exclude JSON feeds and fingerprinted assets.
+/
+  Cache-Control: public, max-age=120
+
+/*/
+  Cache-Control: public, max-age=120
