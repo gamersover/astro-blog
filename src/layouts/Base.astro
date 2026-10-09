@@ -29,11 +29,11 @@ const current=Astro.url.pathname;
  <header class="site-header wrap">
   <a class="wordmark" href="/" aria-label="尘雨尘风 首页"><span class="seal" aria-hidden="true">尘</span><span>尘雨尘风<small>CHEN'S JOURNAL</small></span></a>
   <nav aria-label="主导航">
-   <a href="/" data-astro-prefetch="load" aria-current={current==='/'?'page':undefined}>首页</a>
-   <a href="/topics/" data-astro-prefetch="load" aria-current={current.startsWith('/topics')?'page':undefined}>专题</a>
-   <a href="/archives/" data-astro-prefetch="load" aria-current={current.startsWith('/archives')?'page':undefined}>归档</a>
-   <a href="/about/" data-astro-prefetch="load" aria-current={current==='/about/'?'page':undefined}>关于</a>
-   <a href="/search/" data-astro-prefetch="load" class="search-link" aria-label="搜索文章"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><span>搜索</span></a>
+   <a href="/" class="nav-entry" data-astro-prefetch="load" aria-current={current==='/'?'page':undefined}>首页</a>
+   <a href="/topics/" class="nav-entry" data-astro-prefetch="load" aria-current={current.startsWith('/topics')?'page':undefined}>专题</a>
+   <a href="/archives/" class="nav-entry" data-astro-prefetch="load" aria-current={current.startsWith('/archives')?'page':undefined}>归档</a>
+   <a href="/about/" class="nav-entry" data-astro-prefetch="load" aria-current={current==='/about/'?'page':undefined}>关于</a>
+   <a href="/search/" data-astro-prefetch="load" class="search-link" aria-current={current==='/search/'?'page':undefined} aria-label="搜索文章"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><span>搜索</span></a>
    <button id="theme-switch" class="theme-switch" aria-label="切换深浅主题" title="切换深浅主题">◐</button>
   </nav>
  </header>
