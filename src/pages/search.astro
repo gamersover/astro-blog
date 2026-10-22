@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 ---
-<Base title="搜索" noindex><section class="wrap page-heading"><p class="eyebrow">FIND A THOUGHT</p><h1>找一篇，想读的文章。</h1><p>搜索标题、标签或正文中的词语。</p></section><section class="wrap page-section"><form class="search-form" role="search"><label class="sr-only" for="query">搜索文章</label><input id="query" type="search" name="q" placeholder="试试「极限」「Agent」「心之学」" autocomplete="off"/><button type="submit">搜索</button></form><p class="search-status" role="status" aria-live="polite">输入关键词，开始寻找。</p><div id="results"></div><noscript>搜索需要 JavaScript，也可以前往 <a href="/archives/">文章归档</a> 浏览全部文章。</noscript></section>
+<Base title="搜索" noindex><section class="wrap page-heading"><h1>找一篇，想读的文章。</h1><p>搜索标题、标签或正文中的词语。</p></section><section class="wrap page-section"><form class="search-form" role="search"><label class="sr-only" for="query">搜索文章</label><input id="query" type="search" name="q" placeholder="试试「极限」「Agent」「心之学」" autocomplete="off"/><button type="submit">搜索</button></form><p class="search-status" role="status" aria-live="polite">输入关键词，开始寻找。</p><div id="results"></div><noscript>搜索需要 JavaScript，也可以前往 <a href="/archives/">文章归档</a> 浏览全部文章。</noscript></section>
 <script>
 type Entry={title:string;url:string;date:string;excerpt:string;tags:string[];text:string};
 let index:Promise<Entry[]>|undefined;

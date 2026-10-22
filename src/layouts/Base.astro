@@ -27,7 +27,7 @@ const current=Astro.url.pathname;
 <body>
  <a class="skip-link" href="#main">跳到正文</a>
  <header class="site-header wrap">
-  <a class="wordmark" href="/" aria-label="尘雨尘风 首页"><span class="seal" aria-hidden="true">尘</span><span>尘雨尘风<small>CHEN'S JOURNAL</small></span></a>
+  <a class="wordmark" href="/" aria-label="尘雨尘风 首页"><span class="seal" aria-hidden="true">尘</span><span>尘雨尘风</span></a>
   <nav aria-label="主导航">
    <a href="/" class="nav-entry" data-astro-prefetch="load" aria-current={current==='/'?'page':undefined}>首页</a>
    <a href="/topics/" class="nav-entry" data-astro-prefetch="load" aria-current={current.startsWith('/topics')?'page':undefined}>专题</a>
@@ -38,7 +38,7 @@ const current=Astro.url.pathname;
   </nav>
  </header>
  <main id="main"><slot/></main>
- <footer class="site-footer wrap"><div><a class="footer-title" href="/">尘雨尘风</a><p>写下所见，留下所思。</p></div><div class="footer-links"><a href="https://www.caoqinping.com/">个人主页 ↗</a><a href="/tags/">标签</a><a href="/categories/">分类</a><a href="/rss.xml">RSS ↗</a><span>© {new Date().getFullYear()} 陈华杰</span></div></footer>
+ <footer class="site-footer wrap"><div><a class="footer-title" href="/">尘雨尘风</a><p>写下所见，留下所思。</p></div><div class="footer-links"><a href="https://www.caoqinping.com/">个人主页 ↗</a><a href="/tags/">标签</a><a href="/categories/">分类</a><a href="/rss.xml">RSS ↗</a><span>© 2019–{new Date().getFullYear()} 陈华杰</span></div></footer>
  <script>
   import type {TransitionBeforeSwapEvent} from 'astro:transitions/client';
   document.addEventListener('astro:before-swap',(event)=>{
